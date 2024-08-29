@@ -80,50 +80,7 @@
     buttonContainer.style.zIndex = '10000000000';
     document.body.appendChild(buttonContainer);
 
-    // 创建更新/开启时间按钮
-    const executeButton = document.createElement('button');
-    executeButton.id = 'execute-button';
-    executeButton.textContent = '更新/开启';
-    executeButton.style.display = 'inline-block';
-    executeButton.style.backgroundColor = '#007BFF';
-    executeButton.style.color = 'white';
-    executeButton.style.border = 'none';
-    executeButton.style.padding = '5px';
-    executeButton.style.fontSize = '12px';
-    executeButton.style.borderRadius = '3px';
-    executeButton.style.cursor = 'pointer';
-    executeButton.style.marginRight = '5px'; // 与关闭按钮之间的间距
-    executeButton.onmouseover = () => executeButton.style.backgroundColor = '#0056b3';
-    executeButton.onmouseout = () => executeButton.style.backgroundColor = '#007BFF';
-    buttonContainer.appendChild(executeButton);
-    // 为按钮添加点击事件，更新时间并重新显示时间窗口（如果已关闭）
-    executeButton.onclick = () => {
-        if (timeDisplay.style.display === 'none') {
-            timeDisplay.style.display = 'block';
-        }
-        updateDurations();
-    };
-
-    // 创建关闭时间窗口的按钮
-    const closeButton = document.createElement('button');
-    closeButton.id = 'close-button';
-    closeButton.textContent = '关闭';
-    closeButton.style.display = 'inline-block';
-    closeButton.style.backgroundColor = '#DC3545';
-    closeButton.style.color = 'white';
-    closeButton.style.border = 'none';
-    closeButton.style.padding = '5px';
-    closeButton.style.fontSize = '12px';
-    closeButton.style.borderRadius = '3px';
-    closeButton.style.cursor = 'pointer';
-    closeButton.onmouseover = () => closeButton.style.backgroundColor = '#C82333';
-    closeButton.onmouseout = () => closeButton.style.backgroundColor = '#DC3545';
-    buttonContainer.appendChild(closeButton);
-    // 为关闭按钮添加点击事件，关闭时间显示窗口
-    closeButton.onclick = () => {
-        timeDisplay.style.display = 'none';
-    };
-
+   
     // 格式化时长函数
    function formatDuration(seconds) {
     const hours = Math.floor(seconds / 3600);

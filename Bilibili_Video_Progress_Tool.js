@@ -4,7 +4,7 @@
 // @version      1.0.1
 // @description  这个脚本可以显示哔哩哔哩合集视频的进度条
 // @author       FocusOn1
-// @match        https://greasyfork.org/zh-CN/scripts/440792-b%E7%AB%99%E8%BE%85%E5%8A%A9-%E6%97%B6%E9%95%BF-%E9%9B%86%E6%95%B0-%E5%80%8D%E9%80%9F-%E5%8D%95%E9%9B%86%E5%BE%AA%E7%8E%AF
+// @match        https://greasyfork.org/zh-CN/scripts/505814-b%E7%AB%99%E8%A7%86%E9%A2%91%E8%BF%9B%E5%BA%A6%E6%9D%A1
 // @match        https://www.bilibili.com/video/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=greasyfork.org
 // @grant        none

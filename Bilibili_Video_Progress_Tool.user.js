@@ -20,48 +20,38 @@
     const timeDisplay = document.createElement('div');
     timeDisplay.id = 'time-display';
     timeDisplay.style.position = 'fixed';
-    timeDisplay.style.left = '10px';
+    timeDisplay.style.left = '5px';
     timeDisplay.style.bottom = '10px';
     timeDisplay.style.backgroundColor = '#f6f8fa';
     timeDisplay.style.color = '#24292e';
-    timeDisplay.style.padding = '5px';
-    timeDisplay.style.borderRadius = '25px';
+    timeDisplay.style.padding = '-5px';
+    timeDisplay.style.borderRadius = '100px';
     timeDisplay.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'; // GitHub 阴影
     timeDisplay.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"'; // GitHub 字体
     timeDisplay.style.zIndex = '9999999999';
-    timeDisplay.style.width = 'auto'; // 调整宽度
+    timeDisplay.style.width = '115px'; // 调整宽度
+    timeDisplay.style.height = '115px'; // 调整高度
     document.body.appendChild(timeDisplay);
 
-    // 创建进度条元素
-    const progressBar = document.createElement('progress');
-    progressBar.id = 'progress-bar';
-    progressBar.style.width = '100%';
-    progressBar.style.height = '10px'; // 设置进度条的高度
-    timeDisplay.appendChild(progressBar);
+    // 创建进度条容器
+    const progressBarContainer = document.createElement('div');
+    progressBarContainer.id = 'progress-bar-container';
+    progressBarContainer.style.width = '100%';
+    progressBarContainer.style.height = '100%';
+    progressBarContainer.style.position = 'relative';
+    timeDisplay.appendChild(progressBarContainer);
 
-    // 添加进度条样式
-    progressBar.style.webkitAppearance = 'none'; // 移除默认样式
-    progressBar.style.appearance = 'none';
-    progressBar.style.borderRadius = '5px'; // 设置圆角
-    progressBar.style.backgroundColor = '#ddd'; // 设置未完成部分的颜色
-    progressBar.style.boxShadow = 'inset 0 1px 3px rgba(0,0,0,.2)'; // 设置内阴影
+    // 创建Canvas元素
+    const progressBarCanvas = document.createElement('canvas');
+    progressBarCanvas.id = 'progress-bar-canvas';
+    progressBarCanvas.width = progressBarContainer.clientWidth;
+    progressBarCanvas.height = progressBarContainer.clientHeight;
+    progressBarCanvas.style.position = 'absolute';
+    progressBarCanvas.style.top = '0';
+    progressBarCanvas.style.left = '0';
+    progressBarContainer.appendChild(progressBarCanvas);
 
-    // 设置已完成部分的颜色
-    progressBar.style.setProperty('--progress-color', 'yellow');
-
-    // 使用CSS伪元素设置已完成部分的颜色
-    const style = document.createElement('style');
-    style.textContent = `
-        #progress-bar::-webkit-progress-value {
-            background-color: var(--progress-color);
-            border-radius: 5px;
-        }
-        #progress-bar::-moz-progress-bar {
-            background-color: var(--progress-color);
-            border-radius: 5px;
-        }
-    `;
-    document.head.appendChild(style);
+    const ctx = progressBarCanvas.getContext('2d');
 
     // 格式化时长函数
     function formatDuration(seconds) {
@@ -113,15 +103,7 @@
         if (!videoPlayer) return false;
         const currentVideoProgressInSeconds = videoPlayer.currentTime;
         const { totalDurationInSeconds, totalWatchedDurationInSeconds, remainingDurationInSeconds, percentageWatched } = calculateDurations(durationsInSeconds, currentVideoZeroBasedIndex, currentVideoProgressInSeconds);
-        timeDisplay.innerHTML = `
-            <strong>进度</strong> : ${percentageWatched.toFixed(2)}%  <strong>|</strong>
-            <strong>总时长</strong>: ${formatDuration(totalDurationInSeconds)}  <strong>|</strong>
-            <strong>已观看时长</strong>: ${formatDuration(totalWatchedDurationInSeconds)}  <strong>|</strong>
-            <strong>剩余时长</strong>: ${formatDuration(remainingDurationInSeconds)}
-        `;
-        progressBar.value = percentageWatched;
-        progressBar.max = 100;
-        console.log(`Progress: ${percentageWatched.toFixed(2)}%`); // 调试信息
+        updateProgressBar(percentageWatched);
         return true;
     }
 
@@ -142,16 +124,39 @@
         if (!videoPlayer) return false;
         const currentVideoProgressInSeconds = videoPlayer.currentTime;
         const { totalDurationInSeconds, totalWatchedDurationInSeconds, remainingDurationInSeconds, percentageWatched } = calculateDurations(durationsInSeconds, currentVideoIndex, currentVideoProgressInSeconds);
-        timeDisplay.innerHTML = `
-            <strong>进度</strong>: ${percentageWatched.toFixed(2)}%  <strong>|</strong>
-            <strong>总时长</strong>: ${formatDuration(totalDurationInSeconds)}  <strong>|</strong>
-            <strong>已观看时长</strong>: ${formatDuration(totalWatchedDurationInSeconds)}  <strong>|</strong>
-            <strong>剩余时长</strong>: ${formatDuration(remainingDurationInSeconds)}
-        `;
-        progressBar.value = percentageWatched;
-        progressBar.max = 100;
-        console.log(`Progress: ${percentageWatched.toFixed(2)}%`); // 调试信息
+        updateProgressBar(percentageWatched);
         return true;
+    }
+
+    // 更新进度条的函数
+    function updateProgressBar(percentageWatched) {
+        const radius = 50;
+        const centerX = progressBarCanvas.width / 2;
+        const centerY = progressBarCanvas.height / 2;
+        const strokeWidth = 10;
+
+        ctx.clearRect(0, 0, progressBarCanvas.width, progressBarCanvas.height);
+
+        // 绘制背景圆环
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.strokeStyle = '#ddd';
+        ctx.lineWidth = strokeWidth;
+        ctx.stroke();
+
+        // 绘制进度圆环
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, -Math.PI / 2, (percentageWatched / 100) * 2 * Math.PI - Math.PI / 2);
+        ctx.strokeStyle = 'yellow';
+        ctx.lineWidth = strokeWidth;
+        ctx.stroke();
+
+        // 绘制进度百分比文本
+        ctx.font = '20px Arial';
+        ctx.fillStyle = '#24292e';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`${percentageWatched.toFixed(2)}%`, centerX, centerY);
     }
 
     // 更新时长的主函数
@@ -175,4 +180,3 @@
         setupVideoListener();
     }, 2000);
 })();
-

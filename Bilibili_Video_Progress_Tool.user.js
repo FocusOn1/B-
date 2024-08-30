@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站视频进度条
 // @namespace    http://tampermonkey.net/
-// @version      3.0.1
+// @version      3.0.2
 // @description  这个脚本可以显示哔哩哔哩合集视频的进度条
 // @author       FocusOn1
 // @match        https://greasyfork.org/zh-CN/scripts/505814-b%E7%AB%99%E8%A7%86%E9%A2%91%E8%BF%9B%E5%BA%A6%E6%9D%A1
@@ -52,6 +52,17 @@
     progressBarContainer.appendChild(progressBarCanvas);
 
     const ctx = progressBarCanvas.getContext('2d');
+
+    // 创建数据容器
+    const dataContainer = document.createElement('div');
+    dataContainer.id = 'data-container';
+    dataContainer.style.position = 'absolute';
+    dataContainer.style.width = '100%';
+    dataContainer.style.height = '100%';
+    dataContainer.style.display = 'none'; // 默认隐藏
+    dataContainer.style.textAlign = 'center';
+    dataContainer.style.lineHeight = '115px'; // 垂直居中
+    progressBarContainer.appendChild(dataContainer);
 
     // 格式化时长函数
     function formatDuration(seconds) {
@@ -104,6 +115,7 @@
         const currentVideoProgressInSeconds = videoPlayer.currentTime;
         const { totalDurationInSeconds, totalWatchedDurationInSeconds, remainingDurationInSeconds, percentageWatched } = calculateDurations(durationsInSeconds, currentVideoZeroBasedIndex, currentVideoProgressInSeconds);
         updateProgressBar(percentageWatched);
+        updateDataContainer(totalDurationInSeconds, totalWatchedDurationInSeconds, remainingDurationInSeconds);
         return true;
     }
 
@@ -125,6 +137,7 @@
         const currentVideoProgressInSeconds = videoPlayer.currentTime;
         const { totalDurationInSeconds, totalWatchedDurationInSeconds, remainingDurationInSeconds, percentageWatched } = calculateDurations(durationsInSeconds, currentVideoIndex, currentVideoProgressInSeconds);
         updateProgressBar(percentageWatched);
+        updateDataContainer(totalDurationInSeconds, totalWatchedDurationInSeconds, remainingDurationInSeconds);
         return true;
     }
 
@@ -159,6 +172,16 @@
         ctx.fillText(`${percentageWatched.toFixed(2)}%`, centerX, centerY);
     }
 
+    // 更新数据容器的函数
+   function updateDataContainer(totalDurationInSeconds, totalWatchedDurationInSeconds, remainingDurationInSeconds) {
+    dataContainer.innerHTML = `
+        <br><div>总时长: ${formatDuration(totalDurationInSeconds)}</div>
+        <div>已观看: ${formatDuration(totalWatchedDurationInSeconds)}</div>
+        <div>剩余: ${formatDuration(remainingDurationInSeconds)}</div>
+    `;
+    dataContainer.style.lineHeight = '22px'; // 确保每行内容垂直居中
+}
+
     // 更新时长的主函数
     function updateDurations() {
         if (!updateCollectionDurations()) {
@@ -173,6 +196,17 @@
             videoPlayer.addEventListener('timeupdate', updateDurations);
         }
     }
+
+    // 添加鼠标事件监听器
+    progressBarContainer.addEventListener('mouseenter', () => {
+        progressBarCanvas.style.display = 'none';
+        dataContainer.style.display = 'block';
+    });
+
+    progressBarContainer.addEventListener('mouseleave', () => {
+        progressBarCanvas.style.display = 'block';
+        dataContainer.style.display = 'none';
+    });
 
     // 初始延迟2000ms执行一次，避免第一次载入网址时无法及时加载数据而导致时长为0
     setTimeout(function(){

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站视频进度条
 // @namespace    http://tampermonkey.net/
-// @version      3.0.3
+// @version      4.0.1
 // @description  这个脚本可以显示哔哩哔哩合集视频的进度条
 // @author       FocusOn1
 // @match        https://greasyfork.org/zh-CN/scripts/505814-b%E7%AB%99%E8%A7%86%E9%A2%91%E8%BF%9B%E5%BA%A6%E6%9D%A1
@@ -31,6 +31,7 @@
     timeDisplay.style.zIndex = '9999999999';
     timeDisplay.style.width = '80px'; // 调整宽度
     timeDisplay.style.height = '80px'; // 调整高度
+    timeDisplay.style.cursor = 'move'; // 更改鼠标样式为移动
     document.body.appendChild(timeDisplay);
 
     // 创建进度条容器
@@ -216,4 +217,25 @@
         updateDurations();
         setupVideoListener();
     }, 2000);
+
+    // 拖动功能
+    let isDragging = false;
+    let offsetX, offsetY;
+
+    timeDisplay.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        offsetX = e.clientX - timeDisplay.offsetLeft;
+        offsetY = e.clientY - timeDisplay.offsetTop;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            timeDisplay.style.left = `${e.clientX - offsetX}px`;
+            timeDisplay.style.top = `${e.clientY - offsetY}px`;
+        }
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
 })();

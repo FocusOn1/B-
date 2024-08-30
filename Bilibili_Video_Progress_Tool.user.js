@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站视频进度条
 // @namespace    http://tampermonkey.net/
-// @version      2.0.1
+// @version      3.0.1
 // @description  这个脚本可以显示哔哩哔哩合集视频的进度条
 // @author       FocusOn1
 // @match        https://greasyfork.org/zh-CN/scripts/505814-b%E7%AB%99%E8%A7%86%E9%A2%91%E8%BF%9B%E5%BA%A6%E6%9D%A1

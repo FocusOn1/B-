@@ -21,7 +21,7 @@
   -  4、打开https://www.bilibili.com/ 这个网站，找到你想学习的视频即可开始享用！
     
 ## 效果
-![image](https://github.com/user-attachments/assets/0c916973-841b-4af3-9db1-d2661d0f8c9d)
-![image](https://github.com/user-attachments/assets/5a5cd4d4-3d9f-453d-9e98-dd6e3454b61c)
+![image](https://github.com/user-attachments/assets/f79d2302-1276-4e94-867a-035f3e2b0381)
+
 
 

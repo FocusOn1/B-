@@ -24,8 +24,8 @@
     timeDisplay.style.bottom = '10px';
     timeDisplay.style.backgroundColor = '#f6f8fa';
     timeDisplay.style.color = '#24292e';
-    timeDisplay.style.padding = '10px';
-    timeDisplay.style.borderRadius = '5px';
+    timeDisplay.style.padding = '5px';
+    timeDisplay.style.borderRadius = '25px';
     timeDisplay.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'; // GitHub 阴影
     timeDisplay.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"'; // GitHub 字体
     timeDisplay.style.zIndex = '9999999999';

@@ -11,7 +11,10 @@
   -  2、下载本仓库脚本；
   -  3、在Tampermonkey上添加本脚本；
   -  4、打开https://www.bilibili.com/ 这个网站，找到你想学习的视频即可开始享用！
+       - 建议设置观看效果步骤：网页全屏-按F1
 
 ## 效果
-![image](https://github.com/user-attachments/assets/456fcd90-8180-4a73-859a-1c1c36269991)
+![image](https://github.com/user-attachments/assets/0c916973-841b-4af3-9db1-d2661d0f8c9d)
+![image](https://github.com/user-attachments/assets/5a5cd4d4-3d9f-453d-9e98-dd6e3454b61c)
+
 

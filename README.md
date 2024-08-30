@@ -12,7 +12,7 @@
   -  2、下载本仓库脚本；
   -  3、在Tampermonkey上添加本脚本；
   -  4、打开https://www.bilibili.com/ 这个网站，找到你想学习的视频即可开始享用！
-       - 建议设置观看效果步骤：网页全屏-按F1
+       
 ### greasyfork
   -  1、下载Tampermonkey等管理脚本的扩展；
   -  2、打开https://greasyfork.org/zh-CN；

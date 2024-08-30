@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站视频进度条
 // @namespace    http://tampermonkey.net/
-// @version      3.0.2
+// @version      3.0.3
 // @description  这个脚本可以显示哔哩哔哩合集视频的进度条
 // @author       FocusOn1
 // @match        https://greasyfork.org/zh-CN/scripts/505814-b%E7%AB%99%E8%A7%86%E9%A2%91%E8%BF%9B%E5%BA%A6%E6%9D%A1
@@ -24,13 +24,13 @@
     timeDisplay.style.bottom = '10px';
     timeDisplay.style.backgroundColor = '#f6f8fa';
     timeDisplay.style.color = '#24292e';
-    timeDisplay.style.padding = '-5px';
-    timeDisplay.style.borderRadius = '100px';
+    timeDisplay.style.padding = '5px';
+    timeDisplay.style.borderRadius = '50px';
     timeDisplay.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'; // GitHub 阴影
     timeDisplay.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"'; // GitHub 字体
     timeDisplay.style.zIndex = '9999999999';
-    timeDisplay.style.width = '115px'; // 调整宽度
-    timeDisplay.style.height = '115px'; // 调整高度
+    timeDisplay.style.width = '80px'; // 调整宽度
+    timeDisplay.style.height = '80px'; // 调整高度
     document.body.appendChild(timeDisplay);
 
     // 创建进度条容器
@@ -61,7 +61,11 @@
     dataContainer.style.height = '100%';
     dataContainer.style.display = 'none'; // 默认隐藏
     dataContainer.style.textAlign = 'center';
-    dataContainer.style.lineHeight = '115px'; // 垂直居中
+    dataContainer.style.fontSize = '12px'; // 调整字体大小
+    dataContainer.style.display = 'flex'; // 使用 flex 布局
+    dataContainer.style.flexDirection = 'column'; // 垂直布局
+    dataContainer.style.justifyContent = 'center'; // 垂直居中
+    dataContainer.style.alignItems = 'center'; // 水平居中
     progressBarContainer.appendChild(dataContainer);
 
     // 格式化时长函数
@@ -143,10 +147,10 @@
 
     // 更新进度条的函数
     function updateProgressBar(percentageWatched) {
-        const radius = 50;
+        const radius = 35; // 调整半径
         const centerX = progressBarCanvas.width / 2;
         const centerY = progressBarCanvas.height / 2;
-        const strokeWidth = 10;
+        const strokeWidth = 5; // 调整线宽
 
         ctx.clearRect(0, 0, progressBarCanvas.width, progressBarCanvas.height);
 
@@ -165,7 +169,7 @@
         ctx.stroke();
 
         // 绘制进度百分比文本
-        ctx.font = '20px Arial';
+        ctx.font = '14px Arial'; // 调整字体大小
         ctx.fillStyle = '#24292e';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -173,14 +177,13 @@
     }
 
     // 更新数据容器的函数
-   function updateDataContainer(totalDurationInSeconds, totalWatchedDurationInSeconds, remainingDurationInSeconds) {
-    dataContainer.innerHTML = `
-        <br><div>总时长: ${formatDuration(totalDurationInSeconds)}</div>
-        <div>已观看: ${formatDuration(totalWatchedDurationInSeconds)}</div>
-        <div>剩余: ${formatDuration(remainingDurationInSeconds)}</div>
-    `;
-    dataContainer.style.lineHeight = '22px'; // 确保每行内容垂直居中
-}
+    function updateDataContainer(totalDurationInSeconds, totalWatchedDurationInSeconds, remainingDurationInSeconds) {
+        dataContainer.innerHTML = `
+            <div>总时长: ${formatDuration(totalDurationInSeconds)}</div>
+            <div>已观看: ${formatDuration(totalWatchedDurationInSeconds)}</div>
+            <div>剩余: ${formatDuration(remainingDurationInSeconds)}</div>
+        `;
+    }
 
     // 更新时长的主函数
     function updateDurations() {
@@ -200,7 +203,7 @@
     // 添加鼠标事件监听器
     progressBarContainer.addEventListener('mouseenter', () => {
         progressBarCanvas.style.display = 'none';
-        dataContainer.style.display = 'block';
+        dataContainer.style.display = 'flex';
     });
 
     progressBarContainer.addEventListener('mouseleave', () => {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站视频进度条
 // @namespace    http://tampermonkey.net/
-// @version      4.0.1
+// @version      5.0.1
 // @description  这个脚本可以显示哔哩哔哩合集视频的进度条
 // @author       FocusOn1
 // @match        https://greasyfork.org/zh-CN/scripts/505814-b%E7%AB%99%E8%A7%86%E9%A2%91%E8%BF%9B%E5%BA%A6%E6%9D%A1
@@ -16,14 +16,89 @@
 (function() {
     'use strict';
 
+    // 默认颜色配置
+    let config = {
+        backgroundColor: '#f6f8fa', // 背景颜色
+        fontColor: '#24292e', // 全部数据字体颜色
+        progressBarColor: 'yellow', // 进度条颜色
+        progressBarBackgroundColor: '#ddd', // 进度条背景颜色
+        progressFontColor: '#24292e' // 进度字体颜色
+    };
+
+    // 创建颜色选择弹窗
+    const colorPicker = document.createElement('div');
+    colorPicker.id = 'color-picker';
+    colorPicker.style.display = 'none';
+    colorPicker.style.position = 'fixed';
+    colorPicker.style.top = '50%';
+    colorPicker.style.left = '50%';
+    colorPicker.style.transform = 'translate(-50%, -50%)';
+    colorPicker.style.backgroundColor = '#fff';
+    colorPicker.style.padding = '20px';
+    colorPicker.style.border = '1px solid #ccc';
+    colorPicker.style.zIndex = '10000000000';
+    colorPicker.innerHTML = `
+        <label for="background-color">背景颜色:</label>
+        <input type="color" id="background-color" value="${config.backgroundColor}"><br>
+        <label for="progress-bar-color">进度条颜色:</label>
+        <input type="color" id="progress-bar-color" value="${config.progressBarColor}"><br>
+        <label for="progress-bar-background-color">进度条背景颜色:</label>
+        <input type="color" id="progress-bar-background-color" value="${config.progressBarBackgroundColor}"><br>
+        <label for="progress-font-color">进度字体颜色:</label>
+        <input type="color" id="progress-font-color" value="${config.progressFontColor}"><br>
+        <label for="font-color">全部数据字体颜色:</label>
+        <input type="color" id="font-color" value="${config.fontColor}"><br>
+        <div style="text-align: center;">
+           <button id="save-colors">保存</button>
+           <button id="reset-colors">重置</button>
+        </div>
+    `;
+    document.body.appendChild(colorPicker);
+
+    // 保存颜色
+    document.getElementById('save-colors').addEventListener('click', () => {
+        config.backgroundColor = document.getElementById('background-color').value;
+        config.fontColor = document.getElementById('font-color').value;
+        config.progressBarColor = document.getElementById('progress-bar-color').value;
+        config.progressBarBackgroundColor = document.getElementById('progress-bar-background-color').value;
+        config.progressFontColor = document.getElementById('progress-font-color').value;
+        colorPicker.style.display = 'none';
+        applyColors();
+    });
+
+    // 重置颜色
+    document.getElementById('reset-colors').addEventListener('click', () => {
+        config = {
+            backgroundColor: '#f6f8fa',
+            fontColor: '#24292e',
+            progressBarColor: 'yellow',
+            progressBarBackgroundColor: '#ddd',
+            progressFontColor: '#24292e'
+        };
+        document.getElementById('background-color').value = config.backgroundColor;
+        document.getElementById('font-color').value = config.fontColor;
+        document.getElementById('progress-bar-color').value = config.progressBarColor;
+        document.getElementById('progress-bar-background-color').value = config.progressBarBackgroundColor;
+        document.getElementById('progress-font-color').value = config.progressFontColor;
+        colorPicker.style.display = 'none';
+        applyColors();
+    });
+
+    // 应用颜色
+    function applyColors() {
+        timeDisplay.style.backgroundColor = config.backgroundColor;
+        timeDisplay.style.color = config.fontColor;
+        updateProgressBar(percentageWatched); // 假设 percentageWatched 是一个全局变量
+    }
+
     // 创建时间显示的元素
     const timeDisplay = document.createElement('div');
     timeDisplay.id = 'time-display';
     timeDisplay.style.position = 'fixed';
     timeDisplay.style.left = '5px';
     timeDisplay.style.bottom = '10px';
-    timeDisplay.style.backgroundColor = '#f6f8fa';
-    timeDisplay.style.color = '#24292e';
+    timeDisplay.style.backgroundColor = config.backgroundColor;
+    timeDisplay.style.color = config.fontColor;
     timeDisplay.style.padding = '5px';
     timeDisplay.style.borderRadius = '50px';
     timeDisplay.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)'; // GitHub 阴影
@@ -158,20 +233,20 @@
         // 绘制背景圆环
         ctx.beginPath();
         ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-        ctx.strokeStyle = '#ddd';
+        ctx.strokeStyle = config.progressBarBackgroundColor;
         ctx.lineWidth = strokeWidth;
         ctx.stroke();
 
         // 绘制进度圆环
         ctx.beginPath();
         ctx.arc(centerX, centerY, radius, -Math.PI / 2, (percentageWatched / 100) * 2 * Math.PI - Math.PI / 2);
-        ctx.strokeStyle = 'yellow';
+        ctx.strokeStyle = config.progressBarColor;
         ctx.lineWidth = strokeWidth;
         ctx.stroke();
 
         // 绘制进度百分比文本
         ctx.font = '14px Arial'; // 调整字体大小
-        ctx.fillStyle = '#24292e';
+        ctx.fillStyle = config.progressFontColor;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(`${percentageWatched.toFixed(2)}%`, centerX, centerY);
@@ -221,11 +296,26 @@
     // 拖动功能
     let isDragging = false;
     let offsetX, offsetY;
+    let isMouseDown = false; // 新增鼠标标志位
+
+    // 禁用文本选择
+    function disableTextSelection() {
+        document.body.style.userSelect = 'none';
+        document.body.style.webkitUserSelect = 'none';
+    }
+
+    // 启用文本选择
+    function enableTextSelection() {
+        document.body.style.userSelect = '';
+        document.body.style.webkitUserSelect = '';
+    }
 
     timeDisplay.addEventListener('mousedown', (e) => {
+        isMouseDown = true; // 设置鼠标标志位
         isDragging = true;
         offsetX = e.clientX - timeDisplay.offsetLeft;
         offsetY = e.clientY - timeDisplay.offsetTop;
+        disableTextSelection(); // 禁用文本选择
     });
 
     document.addEventListener('mousemove', (e) => {
@@ -237,5 +327,19 @@
 
     document.addEventListener('mouseup', () => {
         isDragging = false;
+        enableTextSelection(); // 启用文本选择
+        if (isMouseDown) { // 如果鼠标按下后松开，重置标志位
+            isMouseDown = false;
+        }
     });
+
+    // 点击时间显示元素时弹出颜色选择弹窗
+    timeDisplay.addEventListener('click', (e) => {
+        if (!isDragging && !isMouseDown) { // 只有在非拖动状态且非鼠标按下状态才显示颜色设置窗口
+            colorPicker.style.display = 'block';
+        }
+    });
+
+    // 初始化颜色
+    applyColors();
 })();

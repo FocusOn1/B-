@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站视频进度条
 // @namespace    http://tampermonkey.net/
-// @version      6.0.1
+// @version      6.0.2
 // @description  这个脚本可以显示哔哩哔哩合集视频的进度条
 // @author       FocusOn1
 // @match        https://greasyfork.org/zh-CN/scripts/505814-b%E7%AB%99%E8%A7%86%E9%A2%91%E8%BF%9B%E5%BA%A6%E6%9D%A1
@@ -334,6 +334,7 @@
     let isDragging = false;
     let offsetX, offsetY;
     let isMouseDown = false; // 新增鼠标标志位
+    let hasMoved = false; // 新增标志位，检测是否发生了拖动
 
     // 禁用文本选择
     function disableTextSelection() {
@@ -353,27 +354,34 @@
         offsetX = e.clientX - timeDisplay.offsetLeft;
         offsetY = e.clientY - timeDisplay.offsetTop;
         disableTextSelection(); // 禁用文本选择
+        hasMoved = false; // 每次按下时重置为false
         colorPicker.style.display = 'none'; // 拖动时隐藏颜色设置窗口
     });
 
     document.addEventListener('mousemove', (e) => {
-        if (isDragging) {
+        if (isMouseDown) {
+            isDragging = true;
+            hasMoved = true; // 发生拖动时设置为true
             timeDisplay.style.left = `${e.clientX - offsetX}px`;
             timeDisplay.style.top = `${e.clientY - offsetY}px`;
+            colorPicker.style.display = 'none'; // 拖动时隐藏颜色设置窗口
+            opacitySlider.style.display = 'none'; // 拖动时隐藏透明度设置窗口
         }
     });
 
+    // 延迟重置拖动状态
     document.addEventListener('mouseup', () => {
-        isDragging = false;
-        enableTextSelection(); // 启用文本选择
-        if (isMouseDown) { // 如果鼠标按下后松开，重置标志位
-            isMouseDown = false;
+        if (isDragging) {
+            isDragging = false;
+            enableTextSelection();
         }
+        isMouseDown = false;
     });
+
 
     // 点击时间显示元素时弹出颜色选择弹窗
     timeDisplay.addEventListener('click', (e) => {
-        if (!isDragging && !isMouseDown) { // 只有在非拖动状态且非鼠标按下状态才显示颜色设置窗口
+        if (!hasMoved) { // 只有在未发生拖动时才显示颜色设置窗口
             colorPicker.style.display = 'block';
         }
     });
@@ -381,7 +389,7 @@
     // 右击时间显示元素时弹出透明度选择条
     timeDisplay.addEventListener('contextmenu', (e) => {
         e.preventDefault(); // 阻止默认右键菜单
-        if (!isDragging){ // 只有在非拖动状态才显示透明度选择条
+        if (!isDragging && !hasMoved){ // 只有在非拖动状态才显示透明度选择条
             opacitySlider.style.display = 'block';
             opacitySlider.style.top = `${timeDisplay.offsetTop + timeDisplay.offsetHeight - 25}px`;
             opacitySlider.style.left = `${timeDisplay.offsetLeft + 65}px`;

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站视频进度条
 // @namespace    http://tampermonkey.net/
-// @version      5.0.1
+// @version      6.0.1
 // @description  这个脚本可以显示哔哩哔哩合集视频的进度条
 // @author       FocusOn1
 // @match        https://greasyfork.org/zh-CN/scripts/505814-b%E7%AB%99%E8%A7%86%E9%A2%91%E8%BF%9B%E5%BA%A6%E6%9D%A1
@@ -22,8 +22,43 @@
         fontColor: '#24292e', // 全部数据字体颜色
         progressBarColor: 'yellow', // 进度条颜色
         progressBarBackgroundColor: '#ddd', // 进度条背景颜色
-        progressFontColor: '#24292e' // 进度字体颜色
+        progressFontColor: '#24292e', // 进度字体颜色
+        opacity: 1 // 透明度
     };
+
+        // 创建透明度选择条
+    const opacitySlider = document.createElement('div');
+    opacitySlider.id = 'opacity-slider';
+    opacitySlider.style.display = 'none';
+    opacitySlider.style.position = 'fixed';
+    opacitySlider.style.backgroundColor = '#fff';
+    opacitySlider.style.padding = '10px';
+    opacitySlider.style.border = '1px solid #ccc';
+    opacitySlider.style.zIndex = '10000000000';
+    opacitySlider.innerHTML = `
+      <label for="opacity">透明度:</label>
+      <input type="range" id="opacity" min="0" max="1" step="0.1" value="${config.opacity}">
+      <div style="text-align: center;">
+         <button id="save-opacity">保存</button>
+         <button id="reset-opacity">重置</button>
+      </div>
+    `;
+    document.body.appendChild(opacitySlider);
+
+    // 保存透明度
+    document.getElementById('save-opacity').addEventListener('click', () => {
+        config.opacity = document.getElementById('opacity').value;
+        opacitySlider.style.display = 'none';
+        applyColors();
+    });
+
+    // 重置透明度
+    document.getElementById('reset-opacity').addEventListener('click', () => {
+        config.opacity = 1;
+        document.getElementById('opacity').value = config.opacity;
+        opacitySlider.style.display = 'none';
+        applyColors();
+    });
 
     // 创建颜色选择弹窗
     const colorPicker = document.createElement('div');
@@ -88,6 +123,7 @@
     function applyColors() {
         timeDisplay.style.backgroundColor = config.backgroundColor;
         timeDisplay.style.color = config.fontColor;
+        timeDisplay.style.opacity = config.opacity;
         updateProgressBar(percentageWatched); // 假设 percentageWatched 是一个全局变量
     }
 
@@ -107,6 +143,7 @@
     timeDisplay.style.width = '80px'; // 调整宽度
     timeDisplay.style.height = '80px'; // 调整高度
     timeDisplay.style.cursor = 'move'; // 更改鼠标样式为移动
+    timeDisplay.style.opacity = config.opacity; // 应用透明度
     document.body.appendChild(timeDisplay);
 
     // 创建进度条容器
@@ -316,6 +353,7 @@
         offsetX = e.clientX - timeDisplay.offsetLeft;
         offsetY = e.clientY - timeDisplay.offsetTop;
         disableTextSelection(); // 禁用文本选择
+        colorPicker.style.display = 'none'; // 拖动时隐藏颜色设置窗口
     });
 
     document.addEventListener('mousemove', (e) => {
@@ -337,6 +375,16 @@
     timeDisplay.addEventListener('click', (e) => {
         if (!isDragging && !isMouseDown) { // 只有在非拖动状态且非鼠标按下状态才显示颜色设置窗口
             colorPicker.style.display = 'block';
+        }
+    });
+
+    // 右击时间显示元素时弹出透明度选择条
+    timeDisplay.addEventListener('contextmenu', (e) => {
+        e.preventDefault(); // 阻止默认右键菜单
+        if (!isDragging){ // 只有在非拖动状态才显示透明度选择条
+            opacitySlider.style.display = 'block';
+            opacitySlider.style.top = `${timeDisplay.offsetTop + timeDisplay.offsetHeight - 25}px`;
+            opacitySlider.style.left = `${timeDisplay.offsetLeft + 65}px`;
         }
     });
 

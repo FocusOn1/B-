@@ -1,13 +1,13 @@
 # Bilibili_Video_Progress_Tool
 写了可以统计B站学习进度的脚本，这样就可以愉快地看到自己已经看多少，从而增加看视频的耐心和满足感！
-- 建议设置观看效果步骤：网页全屏-按F1
+- 建议设置观看效果步骤：<mark style="background-color: yellow">网页全屏 - 按F1</mark>
 
 ## 功能
-- 用圆环进度条显示进度；
+- 用 **圆环进度条** 显示进度（采用 **百分比** ，比如：20%）；
 - 鼠标移动到圆环进度上，可以显示统计的总时长、已观看时长和剩余时长；
-- 增加【拖动】功能，可以将该工具拖动到网页任意地方；
-- 增加了【自定义颜色】功能，可以用鼠标左键点击该工具进行自定义颜色；
-- 增加了【效果透明度设置】功能，可以用鼠标右键点击该工具进行自定义透明度；
+- 增加【**拖动**】功能，可以将该工具拖动到网页任意地方；
+- 增加【**自定义颜色**】功能，可以用  **鼠标左键**  点击该工具进行自定义颜色；
+- 增加【**效果透明度设置**】功能，可以用  **鼠标右键**  点击该工具进行自定义透明度；
 - 后续功能待改进中……
 
 ## 怎么部署？
@@ -25,10 +25,10 @@
   -  4、打开https://www.bilibili.com/ 这个网站，找到你想学习的视频即可开始享用！
     
 ## 效果
-![image](https://github.com/user-attachments/assets/f79d2302-1276-4e94-867a-035f3e2b0381)
-![image](https://github.com/user-attachments/assets/57c4acf7-aef1-4ffe-8c43-6f22a397d888)
-![image](https://github.com/user-attachments/assets/f8cef6f0-f24e-4c84-961c-47ccdb8be0ea)
-![image](https://github.com/user-attachments/assets/fce3cd80-3916-4329-8cd0-6474a72667a9)
+![image](https://github.com/user-attachments/assets/f79d2302-1276-4e94-867a-035f3e2b0381),
+![image](https://github.com/user-attachments/assets/57c4acf7-aef1-4ffe-8c43-6f22a397d888),
+![image](https://github.com/user-attachments/assets/f8cef6f0-f24e-4c84-961c-47ccdb8be0ea),
+![image](https://github.com/user-attachments/assets/fce3cd80-3916-4329-8cd0-6474a72667a9),
 ![128d1c76a45458ad9a46d059bcdafa63](https://github.com/user-attachments/assets/63aefee6-9713-4359-8521-5b0c96faa3ff)
 
 演示效果：

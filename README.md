@@ -28,8 +28,11 @@
 ![image](https://github.com/user-attachments/assets/f79d2302-1276-4e94-867a-035f3e2b0381)
 ![image](https://github.com/user-attachments/assets/57c4acf7-aef1-4ffe-8c43-6f22a397d888)
 ![image](https://github.com/user-attachments/assets/f8cef6f0-f24e-4c84-961c-47ccdb8be0ea)
-![dbf8c980e020c74430287db8acd6be09](https://github.com/user-attachments/assets/1ff4e9a4-2288-465d-807f-41d17ec1b67e)
+![image](https://github.com/user-attachments/assets/fce3cd80-3916-4329-8cd0-6474a72667a9)
 ![128d1c76a45458ad9a46d059bcdafa63](https://github.com/user-attachments/assets/63aefee6-9713-4359-8521-5b0c96faa3ff)
 
+演示效果：
+
+![演示效果](https://github.com/FocusOn1/Bilibili_Video_Progress_Tool/blob/main/Bilibili_Video_Progress_Tool%20%E6%BC%94%E7%A4%BA%E6%95%88%E6%9E%9C.gif)
 
 

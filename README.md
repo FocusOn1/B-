@@ -6,6 +6,7 @@
 - 用圆环进度条显示进度；
 - 鼠标移动到圆环进度上，可以显示统计的总时长、已观看时长和剩余时长；
 - 增加拖动功能，可以将该工具拖动到网页任意地方；
+- 增加了自定义颜色功能，可以用鼠标左键点击该工具进行自定义颜色；
 - 后续功能待改进中……
 
 ## 怎么部署？
@@ -26,6 +27,7 @@
 ![image](https://github.com/user-attachments/assets/f79d2302-1276-4e94-867a-035f3e2b0381)
 ![image](https://github.com/user-attachments/assets/57c4acf7-aef1-4ffe-8c43-6f22a397d888)
 ![image](https://github.com/user-attachments/assets/f8cef6f0-f24e-4c84-961c-47ccdb8be0ea)
+![dbf8c980e020c74430287db8acd6be09](https://github.com/user-attachments/assets/1ff4e9a4-2288-465d-807f-41d17ec1b67e)
 
 
 
